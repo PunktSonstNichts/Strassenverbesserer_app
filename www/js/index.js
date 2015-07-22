@@ -116,7 +116,8 @@ var app = {
 						// should add user and device tracking
 						var data = "username=" + username + "&password=" + password;
 						$.ajax({
-							url: "http://192.168.2.115/Strassenverbesserer/api/user.php",
+							// url: "http://192.168.2.115/Strassenverbesserer/api/user.php",
+							url: "http://reise.ddns.net/Strassenverbesserer/api/user.php",
 							type: "GET",
 							dataType: 'jsonp',			
 							data: data,
@@ -189,7 +190,7 @@ var app = {
     },
 	reload: function(){
 		app.getPoints();
-		alert("welcome back");
+		// alert("welcome back");
 	},
 	getPoints: function(){ // return due to ajax not possible
 		// Get the map bounds - the top-left and bottom-right locations.
@@ -197,7 +198,8 @@ var app = {
 		console.log(bounds);
 		var data = "ne_lat=" + bounds._northEast.lat + "&ne_lon=" + bounds._northEast.lng + "&sw_lat=" + bounds._southWest.lat + "&sw_lon=" + bounds._southWest.lng;
 		$.ajax({
-			url: "http://192.168.2.115/Strassenverbesserer/api/points.php",
+			//url: "http://192.168.2.115/Strassenverbesserer/api/points.php",
+			url: "http://reise.ddns.net/Strassenverbesserer/api/points.php",
 			type: "GET",
 			dataType: 'jsonp',			
 			data: data,
@@ -288,7 +290,7 @@ var app = {
 
         ft.upload(
 			path,
-            "http://192.168.2.115/Strassenverbesserer/api/image.php",
+            "http:/reise.ddns.net/Strassenverbesserer/api/image.php",
             function(result) {
                 console.log('Upload success: ' + result.responseCode);
                 console.log(result.bytesSent + ' bytes sent');
