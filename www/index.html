@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" data-type="standard" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <meta name="viewport" data-type="IOS" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <link rel="stylesheet" type="text/css" href="css/framework.css" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Strassenverbesserer</title>
+    </head>
+    <body>
+		<div id="map_wrapper">
+			<div id="map">
+				<div class="error_wrapper" id="map_error">
+					<div class="box" style="max-width: 80%; text-align: center;">
+						<div class="errortext"><h1>seems like a connection to mapbox is not possibly.</h1></div>
+						<p>In general, this shouldn't happen. Even with no internet connection you should be able to see cached map tiles.</p>
+						<span>Did you tried turning it off and on again?</span>
+					</div>
+				</div>
+			</div>
+			<div class="onload">
+				<div id="logo_box_background"></div>
+				<div id="onload_map_wrapper">
+					<div id="logo_box">
+						<div id="shadow"></div>
+						<div id="box"></div>
+					</div>
+				</div>
+			</div>
+        </div>
+		<div id="app">
+			<div id="points_result"></div>
+			<div class="onload" id="onload_login" style="display: none;">
+			<div id="onload_contentbox">
+				<div id="onload_log">init javascript</div>
+				<div id="login_register_switch">
+					<div>
+					<button id="goto_login" class="btn flat">log in</button>
+					<button id="goto_register" class="btn btn_success flat">register</button>
+					</div>
+				</div>
+				<div id="loginbox" style="display: none;">
+				<form id="login">
+					<div class="form_row errortext"></div>
+					<div class="form_row"><label for="username">username</label><input type="text" id="username" name="username" placeholder="username"/></div>
+					<div class="form_row"><label for="password">password</label><input type="password" id="password" name="password" placeholder="password"/></div>
+					<div class="form_row">
+						<div class="btn flat login_back" style="width: 28%;"><< back</div><button type="submit" class="btn btn_success flat" style="width: 68%; float: right;">log in </button>
+					</div>
+				</form>
+				</div>
+				<div id="registerbox" style="display: none;">
+					<div id="avatar_loader">
+						<form class="imgupload auto_upload" method="post" action="<?php echo SERVER_URL; ?>includes/backend/imgupload.php" target="ajax_fallback" enctype="multipart/form-data">
+							<div id="avatar_box"><img src="" width="100%" height="100%" id="avatar" style="display: none;"/></div>
+							<input id="avatar_upload_input" type="file" name="image[]" multiple style="display: none;"/>
+							<input type="hidden" name="imgtype" value="<?php echo $object_type; ?>">
+							<input type="hidden" name="imgtype_id" value="<?php echo $object_id; ?>"/>
+							<input type="hidden" name="used_as" value="<?php echo $used_as; ?>"/>
+						</form>
+					</div>
+				<form id="register">
+					<div class="form_row errortext"></div>
+					<div class="form_row"><label for="username">username</label><input type="text" id="username" name="username" placeholder="username"/></div>
+					<div class="form_row"><label for="email">e-mail</label><input type="text" id="email" name="email" placeholder="e-mail"/></div>
+					<div class="form_row"><label for="password">password</label><input type="password" id="password" name="password" placeholder="password"/></div>
+					<div class="form_row">
+						<div class="btn flat login_back" style="width: 28%;"><< back</div><button type="submit" class="btn btn_success flat" style="width: 68%; float: right;">register</button>
+					</div>
+				</form>
+				</div>
+			</div>
+			</div>
+		</div>
+		<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.js'></script>
+		<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.7/mapbox.css' rel='stylesheet' />
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+		<script src="external/jquery/jquery.min.js"></script>
+		<script src="external/jquery/jquery-ui.js"></script>
+		<script src="external/sqlite/sqlite_plugin.js"></script>
+        <script type="text/javascript">
+            app.init();
+        </script>
+    </body>
+</html>
