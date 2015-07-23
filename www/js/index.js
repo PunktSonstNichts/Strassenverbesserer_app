@@ -143,20 +143,8 @@ var app = {
     },
 	construct_map: function(elem_id){
 		
-		    var networkState = navigator.connection.type;
+		var networkState = navigator.connection.type;
 
-			alert(networkState);
-			var states = {};
-			states[Connection.UNKNOWN]  = 'Unknown connection';
-			states[Connection.ETHERNET] = 'Ethernet connection';
-			states[Connection.WIFI]     = 'WiFi connection';
-			states[Connection.CELL_2G]  = 'Cell 2G connection';
-			states[Connection.CELL_3G]  = 'Cell 3G connection';
-			states[Connection.CELL_4G]  = 'Cell 4G connection';
-			states[Connection.CELL]     = 'Cell generic connection';
-			states[Connection.NONE]     = 'No network connection';
-
-			alert('Connection type: ' + states[networkState]);
 		L.mapbox.accessToken = 'pk.eyJ1IjoicHVua3Rzb25zdG5pY2h0cyIsImEiOiJGWWVEQUl3In0.P-wDrt1oIjtCCw265FjGFQ';
 		
 		map = L.map('map').setView([52.374027, 9.739208], 13);
