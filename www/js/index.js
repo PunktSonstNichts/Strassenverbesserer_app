@@ -143,7 +143,8 @@ var app = {
     },
 	construct_map: function(elem_id){
 		
-		var networkState = navigator.connection.type;
+		var networkState = navigator.connection;
+		console.log(networkState);
 
 		L.mapbox.accessToken = 'pk.eyJ1IjoicHVua3Rzb25zdG5pY2h0cyIsImEiOiJGWWVEQUl3In0.P-wDrt1oIjtCCw265FjGFQ';
 		
