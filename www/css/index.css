@@ -170,6 +170,8 @@ width: 100%; height: 100%;
 	.form_row{
 	padding: 5px;
 	width: 80vw;
+	display: flex;
+	flex-wrap: wrap;
 	}
 	#login_register_switch > div{
 	width: 80vw;
@@ -304,7 +306,8 @@ display: none !important;
 	100% { top:100px; height: 190px; margin-top: 10px;}
 	}
 	.form_row{
-	height: 34px;
+	display: flex;
+	flex-wrap: wrap;
 	padding: 5px;
 	}
 	#login_register_switch > div{
@@ -350,6 +353,7 @@ display: none !important;
 	}
 	.form_row > input {
 	width: 40vw;
+    flex: 1;
 	}
 }
 /* Landscape layout (with min-width) */

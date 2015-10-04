@@ -5,6 +5,9 @@ var app = {
 	position: new Object(),
 	geo_event: new Object(),
 	delay: "",
+	// final BASE_URL: "http://192.168.2.115/Strassenverbesserer/",
+	final BASE_URL: "http://reise.ddns.net/Strassenverbesserer",
+	// final BASE_URL: "http://127.0.0.1/Strassenverbesserer/",
 	pictureSource: "",   // picture source
     destinationType: "", // sets the format of returned value
 	deviceType:  (navigator.userAgent.match(/iPad/i))  == "iPad" ? "iPad" : (navigator.userAgent.match(/iPhone/i))  == "iPhone" ? "iPhone" : (navigator.userAgent.match(/Android/i)) == "Android" ? "Android" : (navigator.userAgent.match(/BlackBerry/i)) == "BlackBerry" ? "BlackBerry" : "null",
@@ -69,11 +72,6 @@ var app = {
 						});
 						
 						$("#login").bind('submit', function(e){
-							$("#logo_box_background").slideUp(1500);
-							$("#onload_map_wrapper").delay(500).fadeOut(1000);
-							$("#onload_login").delay(1500).fadeOut(500, function(){
-								$(".onload").remove();
-							});
 							
 							e.preventDefault();
 							
@@ -84,30 +82,70 @@ var app = {
 							var form = $(this);
 							
 							$.ajax({
+								url: app.BASE_URL + "/api/user.php",
 								type: "GET",
 								dataType: 'jsonp',			
 								data: data,
 								success: function(json, status, xhr){ 
 									var ct = xhr.getResponseHeader("content-type") || "";
-
+									var response = json; //default
 									if (ct.indexOf("html") > -1) {
-										var response = jQuery.parseJSON(json);
+										response = jQuery.parseJSON(json);
 									}
 
-									if (ct.indexOf("json") > -1) {
+									if (ct.indexOf("json") > -1 || ct.indexOf("javascript") > -1) {
 										response = json;
 									}
-									console.log(response);
-									if(response["error"] == false){
+									console.log(json);
+									console.log(ct);
+									if(response.status == "ok"){
+										login_animation();
 										if(response.location){
 											location.replace(response.location);
-										}else{
-											$("#logo_box_background").slideUp(1500, function() {
-											});
-											$("#onload_map_wrapper").delay(500).fadeOut(1000);
 										}
 									}else{
-										// drop error here 
+										$("#login_errortext > span").html(response.msg);
+									}
+								}
+							});
+						});
+						// regristation
+						$("#register").bind('submit', function(e){
+							
+							e.preventDefault();
+							
+							console.log("submit");
+							
+							var data = $(this).serialize();
+							var formtype = "GET";
+							var form = $(this);
+							
+							console.log(data);
+							
+							$.ajax({
+								url: app.BASE_URL + "/api/user.php",
+								type: "GET",
+								dataType: 'jsonp',			
+								data: data,
+								success: function(json, status, xhr){ 
+									var ct = xhr.getResponseHeader("content-type") || "";
+									var response = json; //default
+									if (ct.indexOf("html") > -1) {
+										response = jQuery.parseJSON(json);
+									}
+
+									if (ct.indexOf("json") > -1 || ct.indexOf("javascript") > -1) {
+										response = json;
+									}
+									console.log(json);
+									console.log(ct);
+									if(response.status == "ok"){
+										login_animation();
+										if(response.location){
+											location.replace(response.location);
+										}
+									}else{
+										$("#register_errortext > span").html(response.msg);
 									}
 								}
 							});
@@ -117,21 +155,24 @@ var app = {
 						var data = "username=" + username + "&password=" + password;
 						$.ajax({
 							// url: "http://192.168.2.115/Strassenverbesserer/api/user.php",
-							url: "http://reise.ddns.net/Strassenverbesserer/api/user.php",
+							url: app.BASE_URL + "/api/user.php",
 							type: "GET",
 							dataType: 'jsonp',			
 							data: data,
 
 							success: function (answer){
 								if (answer.status == "ok"){
-									changes = false;
+									// store shit here
+									login_animation();
 								}else{
-									// error!
+									console.error(answer);
 								}
 								app.updateList();
 							},
 							error: function(){
+								console.error("connection error");
 								
+								// put user output here
 							}
 						});					
 					}
@@ -139,6 +180,15 @@ var app = {
 					// error
 				}
 			}
+		}
+		
+		/** login animation **/
+		function login_animation(){
+			$("#logo_box_background").slideUp(1500);
+			$("#onload_map_wrapper").delay(500).fadeOut(1000);
+			$("#onload_login").delay(1500).fadeOut(500, function(){
+				$(".onload").remove();
+			});
 		}
     },
 	construct_map: function(elem_id){
@@ -202,8 +252,7 @@ var app = {
 		console.log(bounds);
 		var data = "ne_lat=" + bounds._northEast.lat + "&ne_lon=" + bounds._northEast.lng + "&sw_lat=" + bounds._southWest.lat + "&sw_lon=" + bounds._southWest.lng;
 		$.ajax({
-			//url: "http://192.168.2.115/Strassenverbesserer/api/points.php",
-			url: "http://reise.ddns.net/Strassenverbesserer/api/points.php",
+			url: app.BASE_URL + "api/points.php",
 			type: "GET",
 			dataType: 'jsonp',			
 			data: data,
