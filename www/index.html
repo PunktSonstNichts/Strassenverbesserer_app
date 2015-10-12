@@ -23,7 +23,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="onload">
+			<div>
 				<div id="logo_box_background"></div>
 				<div id="onload_map_wrapper">
 					<div id="logo_box">
@@ -73,6 +73,35 @@
 					<div class="form_row"><label for="password">password</label><input type="password" id="password" name="password" placeholder="password"/></div>
 					<div class="form_row">
 						<div class="btn flat login_back" style="flex: 1; min-width: 120px; margin: 5px;"><< back</div><button type="submit" class="btn btn_success flat" style="flex: 2; min-width: 200px; margin: 5px;">register</button>
+					</div>
+				</form>
+				</div>
+			</div>
+			</div>
+			<div id="new_point" style="display: none;">
+			<div id="onload_contentbox">
+				<div id="addpoint_log">Create a new point @ <span id="addpoint_latlong"></span></div>
+				<div id="new_pointbox">
+					<div id="avatar_loader">
+						<form class="imgupload auto_upload" method="post" action="includes/backend/imgupload.php" target="ajax_fallback" enctype="multipart/form-data">
+							<div id="icon_box"><img src="" width="100%" height="100%" id="icon" style="display: none;"/></div>
+							<input id="avatar_upload_input" type="file" name="image[]" multiple style="display: none;"/>
+							<input type="hidden" name="imgtype" value="<?php echo $object_type; ?>">
+							<input type="hidden" name="imgtype_id" value="<?php echo $object_id; ?>"/>
+							<input type="hidden" name="used_as" value="<?php echo $used_as; ?>"/>
+						</form>
+					</div>
+				<form id="addpoint" method="get" target="ajax_fallback">
+					<div class="form_row errortext" id="register_errortext"><span>&nbsp;</span></div>
+					<div class="form_row"><label for="title">title</label><input type="text" id="title" name="title" placeholder="title"/></div>
+					<div class="form_row"><label for="email">e-mail</label><input type="text" id="email" name="email" placeholder="e-mail"/></div>
+					<div class="form_row">
+						<input type="radio" name="category" class="point_category" value="bike" id="radio_bike"/><label for="radio_bike">bike</label>
+						<input type="radio" name="category" class="point_category" value="car" id="radio_car"/><label for="radio_car">car</label>
+						<input type="radio" name="category" class="point_category" value="foot" id="radio_foot"/><label for="radio_foot">foot</label>
+					</div>
+					<div class="form_row">
+						<div class="btn flat login_back" style="flex: 1; min-width: 120px; margin: 5px;"><< back</div><button type="submit" class="btn btn_success flat" style="flex: 2; min-width: 200px; margin: 5px;">add point</button>
 					</div>
 				</form>
 				</div>

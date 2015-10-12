@@ -2,12 +2,15 @@ var app = {
 	// global vars
 	map: new Object(),
 	points: new Object(),
+	new_point: new Object(),
 	position: new Object(),
 	geo_event: new Object(),
+	new_point_marker: new Object(),
+	points_layer: null,
 	delay: "",
-	// final BASE_URL: "http://192.168.2.115/Strassenverbesserer/",
-	final BASE_URL: "http://reise.ddns.net/Strassenverbesserer",
-	// final BASE_URL: "http://127.0.0.1/Strassenverbesserer/",
+	// BASE_URL: "http://192.168.2.115/Strassenverbesserer/",
+	BASE_URL: "http://reise.ddns.net/Strassenverbesserer/",
+	// BASE_URL: "http://127.0.0.1/Strassenverbesserer/",
 	pictureSource: "",   // picture source
     destinationType: "", // sets the format of returned value
 	deviceType:  (navigator.userAgent.match(/iPad/i))  == "iPad" ? "iPad" : (navigator.userAgent.match(/iPhone/i))  == "iPhone" ? "iPhone" : (navigator.userAgent.match(/Android/i)) == "Android" ? "Android" : (navigator.userAgent.match(/BlackBerry/i)) == "BlackBerry" ? "BlackBerry" : "null",
@@ -204,8 +207,9 @@ var app = {
 		}).addTo(map);
 
 
-		var points_layer = L.mapbox.featureLayer().addTo(map);
+		points_layer = L.mapbox.featureLayer().addTo(map);
 		points = L.featureGroup().addTo(points_layer);
+		new_point = L.featureGroup().addTo(points_layer);
 		
 		return true;
 	},
@@ -227,11 +231,18 @@ var app = {
 			app.updateList();
 		});
 		map.on("load", function(){ /* should do something here */ });
-		map.on('click', function(e){
-			console.log(e);
-			// dialogbox and add point
+		map.on('contextmenu', function(e){
+			app.addPoint(e.latlng)
 		});
 		
+		
+		$(".point_category").on('click', function(e){
+			if(this.checked){
+				$("#icon_box").css({
+					"background-color": "red"
+				});
+			}
+		});
 		new app.geo();
 		
 		return true;
@@ -353,5 +364,20 @@ var app = {
             },
             { fileName: name }
 		);
+	},
+	addPoint: function(latlong){
+		console.log(latlong);
+		if(typeof(new_point_marker) != "undefined"){
+			new_point.removeLayer(new_point_marker);
+		}
+		new_point_marker = L.marker(new L.LatLng(latlong.lat, latlong.lng), {
+			icon: L.mapbox.marker.icon({
+				'marker-color': "#ef4a59"
+			})			
+		});
+		new_point_marker.addTo(new_point);
+		map.setView([latlong.lat, latlong.lng], 18);
+		$("#new_point").slideDown();
+		$("#addpoint_latlong").html(latlong.lat + " // " + latlong.lng);
 	}
 };
