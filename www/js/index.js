@@ -57,21 +57,32 @@ var app = {
 							$("#loginbox").hide();
 							$("#registerbox").slideDown();
 						});
-						function onAvatarSuccess(avatar){
-							var i, len;
-							for (i = 0, len = avatar.length; i < len; i += 1) {
-								uploadFile(avatar[i]);
-							}
-							var Avatar_img = document.getElementById('avatar');
-							Avatar_img.style.display = 'block';
-							Avatar_img.src = avatar.fullPath;
-						}
-						function onAvatarFail(msg){
-							alert(msg);
-						}
 						$("#avatar_box").on('click', function(e){
+							navigator.camera.getPicture(uploadPhoto, function(message) {
+								alert('get picture failed');
+							},{
+								quality: 50, 
+								destinationType: navigator.camera.DestinationType.FILE_URI,
+								sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+								limit: 1
+							});
+						});
+						
+						$("form.imgupload").bind('submit', function(e){
 							e.preventDefault();
-							navigator.device.capture.captureImage(onAvatarSuccess, onAvatarFail, {limit: 1});
+							var form = $(this);
+							var file  = form.children("input[type='file']").get(0).files[0];
+							
+							console.log("ConvertImgtoBase64URL");
+							app.convertImgToBase64URL(file, function(base64){
+								console.log("converted!");
+								console.log(base64);
+								uploadPhoto(base64);
+							});
+						});
+						$("form.imgupload.auto_upload").children("input[type='file']").on( "change", function (e){
+							console.log("trigger submit!");
+							$(this).parent("form.imgupload.auto_upload").trigger("submit");
 						});
 						
 						$("#login").bind('submit', function(e){
@@ -157,7 +168,6 @@ var app = {
 						// should add user and device tracking
 						var data = "username=" + username + "&password=" + password;
 						$.ajax({
-							// url: "http://192.168.2.115/Strassenverbesserer/api/user.php",
 							url: app.BASE_URL + "/api/user.php",
 							type: "GET",
 							dataType: 'jsonp',			
@@ -250,8 +260,6 @@ var app = {
     // deviceready Event Handler
     //
     onDeviceReady: function(){
-        pictureSource = navigator.camera.PictureSourceType;
-        destinationType = navigator.camera.DestinationType;
     },
 	reload: function(){
 		app.getPoints();
@@ -347,28 +355,37 @@ var app = {
 			// drop error here
 		}, { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true });
 	}, 
-	upload_image: function(mediaFile){
+	uploadPhoto: function(mediaFile){
+		
+		alert("hopefully this works");
         var ft = new FileTransfer(),
             path = mediaFile.fullPath,
             name = mediaFile.name;
 
         ft.upload(
 			path,
-            "http:/reise.ddns.net/Strassenverbesserer/api/image.php",
+           app.BASE_URL + "/api/image.php",
             function(result) {
-                console.log('Upload success: ' + result.responseCode);
+                alert('Upload success: ' + result.responseCode);
                 console.log(result.bytesSent + ' bytes sent');
             },
             function(error) {
-                console.log('Error uploading file ' + path + ': ' + error.code);
+               alert('Error uploading file ' + path + ': ' + error.code);
             },
             { fileName: name }
 		);
 	},
 	addPoint: function(latlong){
+		
 		console.log(latlong);
-		if(typeof(new_point_marker) != "undefined"){
+		if(typeof(new_point_marker) != "undefined" && new_point_marker){
+			console.log("new_point_marker");
+			console.log(new_point_marker);
 			new_point.removeLayer(new_point_marker);
+			console.log(new_point_marker);
+		}else{
+			/** if new_point_marker is defined, user is already in addPoint-mode. Only store old bounds on first access **/
+			oldbounds = map.getBounds();
 		}
 		new_point_marker = L.marker(new L.LatLng(latlong.lat, latlong.lng), {
 			icon: L.mapbox.marker.icon({
@@ -379,5 +396,29 @@ var app = {
 		map.setView([latlong.lat, latlong.lng], 18);
 		$("#new_point").slideDown();
 		$("#addpoint_latlong").html(latlong.lat + " // " + latlong.lng);
-	}
+		
+		$("#addpoint_cancel").on("click", function(){
+			new_point.removeLayer(new_point_marker);
+			$("#new_point").slideUp();
+			map.fitBounds(oldbounds);
+		});
+	},
+	convertImgToBase64URL: function(url, callback, outputFormat){
+	console.log("starting img converter");
+	console.log(url);
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+		console.log("onloading img");
+        var canvas = document.createElement('CANVAS'),
+        ctx = canvas.getContext('2d'), dataURL;
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        callback(dataURL);
+        canvas = null; 
+    };
+    img.src = url;
+}
 };
